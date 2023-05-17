@@ -11,8 +11,12 @@ import java.util.Optional;
 @Service
 public class SourceService {
 
-    @Autowired
+
     private SourceRepository newsSourceRepository;
+    @Autowired
+    public SourceService(SourceRepository newsSourceRepository) {
+        this.newsSourceRepository = newsSourceRepository;
+    }
 
     public List<Source> findAll() {
         return newsSourceRepository.findAll();

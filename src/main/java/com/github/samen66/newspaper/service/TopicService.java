@@ -11,9 +11,11 @@ import java.util.Optional;
 
 @Service
 public class TopicService {
-
-    @Autowired
     private TopicRepository newsTopicRepository;
+    @Autowired
+    public TopicService(TopicRepository newsTopicRepository) {
+        this.newsTopicRepository = newsTopicRepository;
+    }
 
     public List<Topic> findAll() {
         return newsTopicRepository.findAll();

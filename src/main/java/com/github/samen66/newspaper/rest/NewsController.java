@@ -3,17 +3,24 @@ package com.github.samen66.newspaper.rest;
 import com.github.samen66.newspaper.model.News;
 import com.github.samen66.newspaper.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/news")
 public class NewsController {
+    private final NewsService newsService;
+
     @Autowired
-    private NewsService newsService;
+    public NewsController(NewsService newsService) {
+        this.newsService = newsService;
+    }
 
     @GetMapping
     public ResponseEntity<List<News>> getAllNews() {
@@ -26,12 +33,12 @@ public class NewsController {
         News createdNews = newsService.create(news);
         return new ResponseEntity<>(createdNews, HttpStatus.CREATED);
     }
-    @GetMapping
-    public ResponseEntity<List<News>> getAllNews(@RequestParam(defaultValue = "0") Integer pageNo,
-                                                 @RequestParam(defaultValue = "10") Integer pageSize) {
-        List<News> list = newsService.findAll(pageNo, pageSize);
-        return ResponseEntity.ok(list);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<News>> getAllNews(@RequestParam(defaultValue = "0") Integer pageNo,
+//                                                 @RequestParam(defaultValue = "10") Integer pageSize) {
+//        List<News> list = newsService.findAll(pageNo, pageSize);
+//        return ResponseEntity.ok(list);
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<News> getNewsById(@PathVariable Integer id) {
@@ -48,8 +55,9 @@ public class NewsController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteNews(@PathVariable Integer id) {
+    public ResponseEntity deleteNews(@PathVariable Integer id) {
         newsService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        Optional<News> optionalNews = newsService.findById(id);
+        return (optionalNews.isPresent() ? ResponseEntity.status(HttpStatus.BAD_REQUEST):ResponseEntity.status(HttpStatus.OK)).build();
     }
 }
