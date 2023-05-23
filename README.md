@@ -44,7 +44,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 - Java Development Kit (JDK) 11 or later
 - Maven 3.6 or later
-- MySQL server
+- Postgresql
 
 ### Installation
 
